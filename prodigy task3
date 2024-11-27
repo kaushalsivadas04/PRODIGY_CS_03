@@ -1,0 +1,80 @@
+import re
+
+def assess_password_strength(password):
+    """
+    Assess the strength of a password based on length, character variety, and complexity.
+
+    Parameters:
+        password (str): The password to assess.
+
+    Returns:
+        dict: A dictionary with the strength rating and feedback.
+    """
+    strength_score = 0
+    feedback = []
+
+    # Check password length
+    if len(password) >= 12:
+        strength_score += 2
+        feedback.append("Good length (12+ characters).")
+    elif len(password) >= 8:
+        strength_score += 1
+        feedback.append("Moderate length (8–11 characters). Consider using a longer password.")
+    else:
+        feedback.append("Too short! Use at least 8 characters.")
+
+    # Check for uppercase and lowercase letters
+    if re.search(r'[A-Z]', password) and re.search(r'[a-z]', password):
+        strength_score += 1
+        feedback.append("Contains both uppercase and lowercase letters.")
+    else:
+        feedback.append("Add both uppercase and lowercase letters for better security.")
+
+    # Check for numbers
+    if re.search(r'\d', password):
+        strength_score += 1
+        feedback.append("Contains numbers.")
+    else:
+        feedback.append("Add numbers to strengthen your password.")
+
+    # Check for special characters
+    if re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+        strength_score += 1
+        feedback.append("Contains special characters.")
+    else:
+        feedback.append("Add special characters (e.g., !, @, #) for better security.")
+
+    # Provide overall strength rating
+    if strength_score >= 5:
+        rating = "Strong"
+    elif strength_score >= 3:
+        rating = "Moderate"
+    else:
+        rating = "Weak"
+
+    return {"rating": rating, "feedback": feedback}
+
+def main():
+    print("Password Strength Assessment Tool")
+    while True:
+        print("\nOptions:")
+        print("1. Assess a password")
+        print("2. Exit")
+
+        choice = input("Select an option (1/2): ")
+
+        if choice == '1':
+            password = input("Enter your password: ")
+            assessment = assess_password_strength(password)
+            print(f"\nPassword Strength: {assessment['rating']}")
+            print("Feedback:")
+            for tip in assessment["feedback"]:
+                print(f"- {tip}")
+        elif choice == '2':
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please select 1 or 2.")
+
+if __name__ == "__main__":
+    main()
